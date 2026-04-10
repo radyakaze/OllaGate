@@ -1,0 +1,9 @@
+return {
+  API_KEYS = {
+    "your-api-key-1",
+    "your-api-key-2",
+    "your-api-key-3",
+  },
+  LOCAL_KEY = "my-secret-token",
+  RATE_LIMIT_COOLDOWN = 60,
+}

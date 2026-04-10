@@ -1,0 +1,10 @@
+services:
+  proxy:
+    image: openresty/openresty:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./config.lua:/usr/local/openresty/nginx/conf/config.lua:ro
+      - ./proxy.lua:/usr/local/openresty/nginx/conf/proxy.lua:ro
+    restart: unless-stopped
