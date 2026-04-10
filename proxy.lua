@@ -1,4 +1,5 @@
 local config = require("config")
+local cjson = require("cjson.safe")
 local shared = ngx.shared.keys
 
 local function get_active_key()
@@ -6,7 +7,12 @@ local function get_active_key()
   local now = ngx.now()
 
   for _ = 1, #keys do
-    local idx = (shared:incr("rr_index", 1, 0) - 1) % #keys + 1
+    local new_idx = shared:incr("rr_index", 1, 0)
+    if new_idx > 1000000 then
+      shared:set("rr_index", 0)
+      new_idx = 0
+    end
+    local idx = (new_idx - 1) % #keys + 1
     local key = keys[idx]
     local disabled_at = shared:get("disabled:" .. key)
     if not disabled_at or (now - disabled_at) >= config.RATE_LIMIT_COOLDOWN then
@@ -42,3 +48,13 @@ end
 
 ngx.ctx.picked_key = key
 ngx.req.set_header("Authorization", "Bearer " .. key)
+
+ngx.req.read_body()
+local body = ngx.req.get_body_data()
+if body then
+  local data = cjson.decode(body)
+  if data and data.model then
+    ngx.ctx.model = data.model
+  end
+end
+ngx.ctx.start_time = ngx.now()
