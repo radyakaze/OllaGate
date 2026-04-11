@@ -1,10 +1,8 @@
 services:
   proxy:
-    image: openresty/openresty:alpine
+    build: .
     ports:
       - "8080:80"
-    volumes:
-      - ./src/:/usr/local/openresty/nginx/conf/:ro
     env_file:
       - .env
     restart: unless-stopped

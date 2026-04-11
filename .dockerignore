@@ -18,6 +18,7 @@ tmp/
 *.log
 
 # Development files
+.github/
 .sisyphus/
 .sisyphus/**/*
 
