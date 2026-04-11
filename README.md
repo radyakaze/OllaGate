@@ -31,15 +31,15 @@ docker run -d \
   -p 8080:80 \
   --env-file .env \
   --restart unless-stopped \
-  radya/ollagate:latest
+  ghcr.io/radyakaze/ollagate
 ```
 
 ### Option 2: Clone and Run Locally
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/radya/ollagate.git
-cd ollagate
+git clone https://github.com/radyakaze/OllaGate.git
+cd OllaGate
 
 # 2. Copy environment template
 cp .env.example .env
