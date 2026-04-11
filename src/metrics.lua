@@ -59,7 +59,7 @@ table.insert(metrics, string.format('ollagate_key_rotations_total %d', get_count
 table.insert(metrics, '')
 table.insert(metrics, '# HELP ollagate_uptime_seconds Nginx uptime in seconds')
 table.insert(metrics, '# TYPE ollagate_uptime_seconds gauge')
-table.insert(metrics, string.format('ollagate_uptime_seconds %d', ngx.time() - ngx.worker.start_time()))
+table.insert(metrics, string.format('ollagate_uptime_seconds %d', ngx.time() - (ngx.shared.keys:get("nginx_start_time") or ngx.worker.start_time())))
 
 ngx.header["Content-Type"] = "text/plain; charset=utf-8"
 ngx.say(table.concat(metrics, "\n"))
