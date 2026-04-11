@@ -32,6 +32,7 @@ local function check_auth()
     ngx.status = 401
     ngx.header["Content-Type"] = "application/json"
     ngx.say('{"error":"unauthorized"}')
+    ngx.shared.keys:incr("req_401", 1, 0)
     ngx.exit(401)
   end
 end
@@ -43,9 +44,11 @@ if not key then
   ngx.status = 503
   ngx.header["Content-Type"] = "application/json"
   ngx.say('{"error":"all keys rate limited"}')
+  ngx.shared.keys:incr("req_503", 1, 0)
   ngx.exit(503)
 end
 
+ngx.shared.keys:incr("key_rotations", 1, 0)
 ngx.ctx.picked_key = key
 ngx.req.set_header("Authorization", "Bearer " .. key)
 

@@ -6,4 +6,5 @@ return {
   },
   LOCAL_KEY = "my-secret-token",
   RATE_LIMIT_COOLDOWN = 60,
+  METRICS_ENABLED = false,
 }
