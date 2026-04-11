@@ -28,7 +28,7 @@ end
 
 local function check_auth()
   local header = ngx.req.get_headers()["Authorization"]
-  if not header or header ~= "Bearer " .. config.LOCAL_KEY then
+  if not header or header:lower() ~= ("Bearer " .. config.LOCAL_KEY):lower() then
     ngx.status = 401
     ngx.header["Content-Type"] = "application/json"
     ngx.say('{"error":"unauthorized"}')
@@ -48,8 +48,8 @@ if not key then
   ngx.exit(503)
 end
 
-ngx.shared.keys:incr("key_rotations", 1, 0)
 ngx.ctx.picked_key = key
+ngx.shared.keys:incr("key_rotations", 1, 0)
 ngx.req.set_header("Authorization", "Bearer " .. key)
 
 ngx.req.read_body()
