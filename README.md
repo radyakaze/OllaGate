@@ -1,6 +1,6 @@
 # OllaGate
 
-OpenResty gateway for Ollama Cloud with multi-key rotation, rate limit protection, and local auth.
+OpenResty/Nginx gateway for Ollama Cloud with multi-key rotation, rate limit protection, and local auth.
 
 ## Features
 
@@ -13,17 +13,44 @@ OpenResty gateway for Ollama Cloud with multi-key rotation, rate limit protectio
 
 ## Quick Start
 
+### Option 1: Using Pre-built Image (No Clone Required)
+
 ```bash
-# 1. Copy environment template
+# 1. Create .env file
+cat > .env << 'EOF'
+API_KEY_1=your-ollama-key-1
+API_KEY_2=your-ollama-key-2
+LOCAL_KEY=my-secret-token
+RATE_LIMIT_COOLDOWN=60
+METRICS_ENABLED=false
+EOF
+
+# 2. Run directly from Docker Hub
+docker run -d \
+  --name ollagate \
+  -p 8080:80 \
+  --env-file .env \
+  --restart unless-stopped \
+  radya/ollagate:latest
+```
+
+### Option 2: Clone and Run Locally
+
+```bash
+# 1. Clone repository
+git clone https://github.com/radya/ollagate.git
+cd ollagate
+
+# 2. Copy environment template
 cp .env.example .env
 
-# 2. Edit .env — add your API keys and set LOCAL_KEY
+# 3. Edit .env — add your API keys and set LOCAL_KEY
 # API_KEY_1=your-key-1
 # API_KEY_2=your-key-2
 # ...
 # LOCAL_KEY=my-secret-token
 
-# 3. Run
+# 4. Run
 docker compose up -d
 ```
 
@@ -70,6 +97,23 @@ curl http://localhost:8080/metrics
 ```
 
 ## Production
+
+### Using Pre-built Image (Recommended)
+
+```bash
+# Pull and run from Docker Hub
+docker run -d \
+  --name ollagate \
+  -p 8080:80 \
+  -e API_KEY_1="sk-xxx" \
+  -e API_KEY_2="sk-yyy" \
+  -e LOCAL_KEY="secret" \
+  -e RATE_LIMIT_COOLDOWN=60 \
+  --restart unless-stopped \
+  radya/ollagate:latest
+```
+
+### Build Your Own Image
 
 ```bash
 # Build image
