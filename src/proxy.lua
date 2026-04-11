@@ -2,9 +2,20 @@ local config = require("config")
 local cjson = require("cjson.safe")
 local shared = ngx.shared.keys
 
+local function seconds_until_monday_midnight()
+  local now = ngx.time()
+  local tomorrow = os.date("!*t", now + 86400)
+  local days_until = (8 - tomorrow.wday) % 7
+  if days_until == 0 then
+    days_until = 7
+  end
+  local t = os.date("!*t", now)
+  local seconds_remaining_today = 86400 - (t.hour * 3600 + t.min * 60 + t.sec)
+  return seconds_remaining_today + (days_until - 1) * 86400
+end
+
 local function get_active_key()
   local keys = config.API_KEYS
-  local now = ngx.now()
 
   for _ = 1, #keys do
     local new_idx = shared:incr("rr_index", 1, 0)
@@ -15,10 +26,7 @@ local function get_active_key()
     local idx = (new_idx - 1) % #keys + 1
     local key = keys[idx]
     local disabled_at = shared:get("disabled:" .. key)
-    if not disabled_at or (now - disabled_at) >= config.RATE_LIMIT_COOLDOWN then
-      if disabled_at then
-        shared:delete("disabled:" .. key)
-      end
+    if not disabled_at then
       return key
     end
   end

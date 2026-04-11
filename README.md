@@ -6,6 +6,7 @@ OpenResty/Nginx gateway for Ollama Cloud with multi-key rotation, rate limit pro
 
 - **Round-robin** API key rotation
 - **Auto-disable** keys on 429 rate limit, re-enable after cooldown
+- **Weekly usage limit cooldown** — disable key until next Monday 00:00 UTC on "weekly usage limit" error
 - **Streaming** support (zero buffering)
 - **Local auth** with Bearer token
 - **Rate limiting** (10r/s with burst 20)
@@ -73,6 +74,9 @@ RATE_LIMIT_COOLDOWN=60
 
 # Enable Prometheus metrics endpoint
 METRICS_ENABLED=false
+
+# Enable weekly usage limit cooldown mode
+WEEKLY_LIMIT_COOLDOWN_MODE=true
 ```
 
 | Variable | Description | Default |
@@ -81,6 +85,7 @@ METRICS_ENABLED=false
 | `LOCAL_KEY` | Bearer token for local auth | `my-secret-token` |
 | `RATE_LIMIT_COOLDOWN` | Seconds before a 429'd key is re-enabled | 60 |
 | `METRICS_ENABLED` | Enable `/metrics` endpoint | false |
+| `WEEKLY_LIMIT_COOLDOWN_MODE` | Enable weekly limit cooldown mode | true |
 
 ## Development
 
