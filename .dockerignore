@@ -1,0 +1,37 @@
+# Git
+.git
+.gitignore
+
+# Environment files (contain secrets)
+.env
+.env.local
+.env.*.local
+
+# Documentation (not needed in image)
+*.md
+AGENTS.md
+docs/
+
+# Logs and temporary files
+logs/
+tmp/
+*.log
+
+# Development files
+.sisyphus/
+.sisyphus/**/*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Keep only essential files
+!src/
+!Dockerfile
