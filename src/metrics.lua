@@ -2,7 +2,7 @@ local ngx = ngx
 local shared = ngx.shared.keys
 local config = require("config")
 
-if config.METRICS_ENABLED == false then
+if config.METRICS_ENABLED ~= true then
   ngx.status = 404
   ngx.say("Not Found")
   ngx.exit(404)

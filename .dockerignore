@@ -33,6 +33,7 @@ Thumbs.db
 *.swo
 *~
 
-# Keep only essential files
+# Keep essential files
 !src/
 !Dockerfile
+!entrypoint.sh

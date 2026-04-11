@@ -14,7 +14,6 @@ api_var_names=$(env | grep '^API_KEY_' | cut -d= -f1 | sort)
 
 # ── Generate Lua config module with all values baked in ──
 
-# Escape for Lua double-quoted strings: \ → \\, " → \"
 lua_escape() {
   printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
 }
@@ -22,7 +21,7 @@ lua_escape() {
 api_count=0
 lua_keys=""
 for var in ${api_var_names}; do
-  eval "val=\$${var}"
+  val=$(printenv "${var}")
   if [ -n "${val}" ]; then
     if [ -n "${lua_keys}" ]; then
       lua_keys="${lua_keys}, "
@@ -34,6 +33,17 @@ done
 
 local_key="${LOCAL_KEY:-my-secret-token}"
 rate_limit_cooldown="${RATE_LIMIT_COOLDOWN:-60}"
+
+# Validate RATE_LIMIT_COOLDOWN is a positive integer
+case "${rate_limit_cooldown}" in
+  ''|*[!0-9]*)
+    echo "[ollagate] ERROR: RATE_LIMIT_COOLDOWN must be a positive integer, got: '${rate_limit_cooldown}'" >&2
+    exit 1
+    ;;
+  0)
+    echo "[ollagate] WARNING: RATE_LIMIT_COOLDOWN=0 means keys are re-enabled instantly" >&2
+    ;;
+esac
 
 if [ "${METRICS_ENABLED}" = "true" ]; then
   lua_metrics="true"
