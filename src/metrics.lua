@@ -13,11 +13,6 @@ local function get_counter(name)
   return val or 0
 end
 
-local function get_gauge(name)
-  local val, _ = shared:get(name)
-  return val or 0
-end
-
 local metrics = {}
 
 -- Request counter by status
