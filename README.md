@@ -101,41 +101,6 @@ curl http://localhost:8080/health
 curl http://localhost:8080/metrics
 ```
 
-## Production
-
-### Using Pre-built Image (Recommended)
-
-```bash
-# Pull and run from Docker Hub
-docker run -d \
-  --name ollagate \
-  -p 8080:80 \
-  -e API_KEY_1="sk-xxx" \
-  -e API_KEY_2="sk-yyy" \
-  -e LOCAL_KEY="secret" \
-  -e RATE_LIMIT_COOLDOWN=60 \
-  --restart unless-stopped \
-  radya/ollagate:latest
-```
-
-### Build Your Own Image
-
-```bash
-# Build image
-docker build -t yourname/ollagate:latest .
-
-# Run with environment variables
-docker run -d \
-  -p 8080:80 \
-  -e API_KEY_1="sk-xxx" \
-  -e API_KEY_2="sk-yyy" \
-  -e LOCAL_KEY="secret" \
-  -e RATE_LIMIT_COOLDOWN=60 \
-  yourname/ollagate:latest
-```
-
-Or use `docker-compose.prod.yml` with secrets.
-
 ## Architecture
 
 ```
