@@ -55,9 +55,12 @@ ngx.req.set_header("Authorization", "Bearer " .. key)
 ngx.req.read_body()
 local body = ngx.req.get_body_data()
 if body then
-  local data = cjson.decode(body)
-  if data and data.model then
+  local ok, data = pcall(cjson.decode, body)
+  if ok and data and data.model then
     ngx.ctx.model = data.model
+  else
+    io.stderr:write("[proxy] JSON decode failed: " .. tostring(data) .. "\n")
+    io.stderr:flush()
   end
 end
 ngx.ctx.start_time = ngx.now()
