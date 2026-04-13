@@ -125,6 +125,105 @@ Client → Auth check → Rate limit check → Round-robin pick key → Proxy to
 └── .dockerignore           # Build exclusions
 ```
 
+## Agent Client Configuration
+
+<details>
+<summary>Codex</summary>
+
+`~/.codex/config.toml`
+
+```toml
+# Disables all user confirmation prompts for actions. Extremely dangerous—remove this setting if you're new to Codex.
+# approval_policy = "never"
+
+# Grants unrestricted system access: AI can read/write any file and execute network-enabled commands. Highly risky—remove this setting if you're new to Codex.
+# sandbox_mode = "danger-full-access"
+
+model_provider = "ollagate"
+model = "glm-5.1" # or any Ollama Cloud model available
+model_reasoning_effort = "high"
+
+[model_providers.ollagate]
+name = "ollagate"
+base_url = "http://127.0.0.1:8080/v1"
+wire_api = "responses"
+```
+
+`~/.codex/auth.json`
+
+```json
+{
+  "OPENAI_API_KEY": "my-secret-token"
+}
+```
+
+</details>
+
+<details>
+<summary>OpenCode</summary>
+
+`~/.config/opencode/opencode.jsonc`
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollagate": {
+      "name": "OllaGate",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://localhost:8080/v1",
+        "apiKey": "my-secret-token"
+      },
+      "models": {
+        "glm-5.1": {
+          "name": "GLM 5.1",
+          "reasoning": true,
+          "limit": {
+            "context": 198000,
+            "output": 4096
+          }
+        },
+        "kimi-k2.5": {
+          "name": "Kimi K2.5",
+          "reasoning": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 256000,
+            "output": 8192
+          }
+        },
+        "minimax-m2.7": {
+          "name": "MiniMax M2.7",
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 4096
+          }
+        },
+        "gemini-3-flash-preview": {
+          "name": "Gemini 3 Flash Lite",
+          "reasoning": false,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 8192
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+</details>
+
 ## Security
 
 - **Never commit `.env`** — contains secrets
